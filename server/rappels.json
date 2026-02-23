@@ -1,0 +1,53 @@
+[
+  {
+    "libelle_produit": "ballotine pintade aux cepes",
+    "marque": "leguelier",
+    "identification_lots": "3383883752028$502926$date limite de consommation$2026-02-07$",
+    "photo_url": "https://rappel.conso.gouv.fr/image/3df84c8a-4c98-476c-b44f-7d6ffb7ace01.jpg",
+    "date_debut_commercialisation": "2026-01-29",
+    "date_fin_commercialisation": "2026-02-03",
+    "distributeurs": "société louage",
+    "zone_geographique": "france entière",
+    "motif_rappel": "présence de salmonelles",
+    "risques_encourus": "salmonella spp (agent responsable de la salmonellose). les toxi-infections alimentaires causées par les salmonelles se traduisent par des troubles gastro-intestinaux (diarrhée, vomissements).",
+    "informations_complementaires": null,
+    "conduite_a_tenir": "ne plus consommer|rapporter le produit au point de vente|contacter le service consommateur|détruire le produit",
+    "lien_pdf": "https://rappel.conso.gouv.fr/affichettepdf/21170/interne",
+    "numero_contact": "0237340660",
+    "modalites_compensation": "remboursement"
+  },
+  {
+    "libelle_produit": "faux filet caissette",
+    "marque": "e.leclerc saint-aunès",
+    "identification_lots": "0201712000000$vbf25337101jbv$date limite de consommation$2026-01-02$|0201712000000$vbf25337101jbv$date limite de consommation$2026-01-03$|0201712000000$vbf25342101$date limite de consommation$2026-01-07$",
+    "photo_url": "https://rappel.conso.gouv.fr/image/28a9db1e-b549-421a-9c0d-f96283ff06e4.jpg",
+    "date_debut_commercialisation": "2025-12-29",
+    "date_fin_commercialisation": "2026-01-07",
+    "distributeurs": "e.leclerc saint-aunès",
+    "zone_geographique": "34130 saint-aunes",
+    "motif_rappel": "défaut d'herméticité du conditionnement sous vide de certaines matières premières utilisées pour la fabrication des caissettes de faux filets ayant provoqué une altération du produit avant la date limite de consommation.",
+    "risques_encourus": "autres contaminants biologiques. risque d'intoxication alimentaire.",
+    "informations_complementaires": "caissettes de faux filets vendues en libre-service du 29/12/2025 au 07/01/2026 portant un gtin poids variable commençant par 0201712. nous vous prions de nous excuser pour la gêne occasionnée et vous remercions de votre compréhension.",
+    "conduite_a_tenir": "ne plus consommer|contacter le point de vente|détruire le produit",
+    "lien_pdf": "https://rappel.conso.gouv.fr/affichettepdf/20958/interne",
+    "numero_contact": "0467874400",
+    "modalites_compensation": "remboursement"
+  },
+  {
+    "libelle_produit": "guigoz lait infantile en poudre",
+    "marque": "guigoz",
+    "identification_lots": "8445291843035... (Voir la liste complète dans les données d'origine pour tous les lots)",
+    "photo_url": "https://rappel.conso.gouv.fr/image/b67ffd70-a707-4136-af7c-b96d88298a5a.jpg",
+    "date_debut_commercialisation": "2025-05-16",
+    "date_fin_commercialisation": "2026-01-06",
+    "distributeurs": "auchan / carrefour / match / intermarché / francap / monoprix / franprix / leclerc / amazon / lidl / pharmacie",
+    "zone_geographique": "france entière",
+    "motif_rappel": "rappel volontaire: un ingrédient provenant d'un fournisseur est à l'origine de la présence potentielle de céréulide provenant d'une huile riche en acide arachidonique (ara)",
+    "risques_encourus": "autre risque. risque de vomissement et de diarrhée.",
+    "informations_complementaires": "compensation : bons d'achats. tous les autres produits guigoz® et les autres lots des mêmes produits - qui ne sont pas concernés par ce rappel - peuvent être consommés en toute sécurité. en cas de suspicion de troubles de santé en lien avec la consommation de ce produit contactez un professionnel de santé.",
+    "conduite_a_tenir": "ne plus consommer|ne plus utiliser le produit|contacter le service consommateur|détruire le produit",
+    "lien_pdf": "https://rappel.conso.gouv.fr/affichettepdf/20947/interne",
+    "numero_contact": "0800100409",
+    "modalites_compensation": "autre (voir informations complémentaires)"
+  }
+]
