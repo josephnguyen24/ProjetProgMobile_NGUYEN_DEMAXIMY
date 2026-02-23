@@ -1,11 +1,10 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 onBootstrap(function (e) {
-  e.next(); // laisser PocketBase finir son init
+  e.next(); 
 
-  // ============================================================
-  // Schéma de la collection
-  // ============================================================
+  // Orga de la collection
+
 
   var FIELDS = [
     { name: "libelle_produit",               type: "text" },
@@ -25,9 +24,8 @@ onBootstrap(function (e) {
     { name: "modalites_compensation",        type: "text" },
   ];
 
-  // ============================================================
-  // 1️⃣  Création de la collection si elle n'existe pas
-  // ============================================================
+  // Création de la collection si elle n'existe pas
+
 
   var collection;
 
@@ -47,9 +45,7 @@ onBootstrap(function (e) {
     console.log("[rappels] Collection créée ✅");
   }
 
-  // ============================================================
-  // 2️⃣  Fonction upsert (insert ou update)
-  // ============================================================
+// Fonction insert ou update si existant
 
   function upsertItems(col, items) {
     var created = 0;
@@ -91,9 +87,7 @@ onBootstrap(function (e) {
     console.log("[rappels] " + created + " créés, " + updated + " mis à jour");
   }
 
-  // ============================================================
-  // 3️⃣  Import du fichier rappels.json local (données initiales)
-  // ============================================================
+  // Import de rappels.json
 
   try {
     console.log("[rappels] Import rappels.json local…");
@@ -104,9 +98,7 @@ onBootstrap(function (e) {
     console.error("[rappels] Erreur import JSON local :", err);
   }
 
-  // ============================================================
-  // 4️⃣  CRON 2x par jour — sync depuis l'API Rappel Conso
-  // ============================================================
+  //Fin du 4 appel 2 fois par jour
 
   cronAdd("sync_rappels", "0 0,12 * * *", function () {
     console.log("[rappels] ⏰ CRON déclenché — sync API Rappel Conso");
