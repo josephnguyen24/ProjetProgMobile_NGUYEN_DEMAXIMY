@@ -3,8 +3,10 @@ import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
 import 'package:formation_flutter/pocketbase/pocketbase_client.dart';
-import 'package:formation_flutter/login_page.dart';
-import 'package:formation_flutter/register_page.dart';
+import 'package:formation_flutter/screens/auth/login_page.dart';
+import 'package:formation_flutter/screens/auth/register_page.dart';
+import 'package:formation_flutter/screens/homepage/home_page.dart';
+import 'package:formation_flutter/screens/favorites/favorites_page.dart';
 
 void main() async {
   // INIT
@@ -50,6 +52,19 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(
+          0xFFF5F6F8,
+        ), // Fond grisé pour cartes
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFF5F6F8),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Color(0xFF001F5B)),
+          titleTextStyle: TextStyle(
+            color: Color(0xFF001F5B),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         extensions: [OffThemeExtension.defaultValues()],
         fontFamily: 'Avenir',
         dividerTheme: const DividerThemeData(
@@ -75,6 +90,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/home': (context) => const HomePage(),
+        '/favorites': (context) => const FavoritesPage(),
       },
     );
   }

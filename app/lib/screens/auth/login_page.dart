@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/custom_button.dart';
-import 'package:formation_flutter/custom_input_field.dart';
+import 'package:formation_flutter/widget/custom_button.dart';
+import 'package:formation_flutter/widget/custom_input_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,14 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _loginUser() {
-    // Cette fonction sera appelée pour se connecter.
-    // Pour l'instant, on se contente d'afficher les données.
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Connexion pour : $email')));
-    // Ici, vous ajouterez la logique d'authentification réelle.
+    // Navigation directe vers la page d'accueil (bypasse l'authentification pour le moment)
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

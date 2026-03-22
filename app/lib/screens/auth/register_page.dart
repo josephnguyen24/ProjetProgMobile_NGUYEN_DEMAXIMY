@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/custom_button.dart';
-import 'package:formation_flutter/custom_input_field.dart';
+import 'package:formation_flutter/widget/custom_button.dart';
+import 'package:formation_flutter/widget/custom_input_field.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
