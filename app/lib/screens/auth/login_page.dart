@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/custom_button.dart';
-import 'package:formation_flutter/widget/custom_input_field.dart';
+import 'package:formation_flutter/custom_input_field.dart';
 import 'package:formation_flutter/services/auth_service.dart';
+import 'package:formation_flutter/services/favorite_service.dart';
+import 'package:formation_flutter/services/scan_service.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController    = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -23,13 +25,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _loginUser() async {
-    final email = _emailController.text.trim();
+    final email    = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez remplir tous les champs.')),
-      );
+      _showSnack('Veuillez remplir tous les champs.');
       return;
     }
 
@@ -39,16 +39,29 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
 
     if (success) {
-      // Redirige vers la page principale en remplaçant la pile
+      // Pré-charge les scans et les favoris de l'utilisateur
+      await Future.wait([
+        context.read<ScanService>().load(force: true),
+        context.read<FavoriteService>().load(force: true),
+      ]);
+
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authService.errorMessage ?? 'Erreur de connexion.'),
-          backgroundColor: Colors.red.shade700,
-        ),
+      _showSnack(
+        authService.errorMessage ?? 'Erreur de connexion.',
+        isError: true,
       );
     }
+  }
+
+  void _showSnack(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red.shade700 : null,
+      ),
+    );
   }
 
   @override
@@ -57,10 +70,8 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Connexion',
-          style: TextStyle(color: Color(0xFF001F5B)),
-        ),
+        title: const Text('Connexion',
+            style: TextStyle(color: Color(0xFF001F5B))),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -68,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
                 'Connexion',
@@ -98,7 +108,6 @@ class _LoginPageState extends State<LoginPage> {
               CustomButton(
                 text: 'Créer un compte',
                 onPressed: () => Navigator.pushNamed(context, '/register'),
-                isLoading: false,
               ),
               const SizedBox(height: 15),
               CustomButton(

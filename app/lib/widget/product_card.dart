@@ -1,104 +1,108 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/model/dummy_product.dart';
+import 'package:formation_flutter/res/app_colors.dart';
 
+/// Carte produit réutilisable dans l'historique et les favoris.
+///
+/// Fournissez [barcode], [productName] et optionnellement [productImage].
+/// [onTap] est appelé quand l'utilisateur tape sur la carte.
+/// [trailing] permet d'ajouter un widget en fin de ligne (ex: bouton étoile).
 class ProductCard extends StatelessWidget {
-  final DummyProduct product;
+  const ProductCard({
+    super.key,
+    required this.barcode,
+    this.productName,
+    this.productImage,
+    this.subtitle,
+    this.onTap,
+    this.trailing,
+  });
 
-  const ProductCard({super.key, required this.product});
-
-  Color _getNutriscoreColor(String score) {
-    switch (score.toUpperCase()) {
-      case 'A':
-        return const Color(0xFF008B45); // Vert foncé
-      case 'B':
-        return const Color(0xFF85C441); // Vert clair
-      case 'C':
-        return const Color(0xFFFFC107); // Jaune
-      case 'D':
-        return const Color(0xFFFF8C00); // Orange
-      case 'E':
-        return const Color(0xFFE53935); // Rouge
-      default:
-        return Colors.grey;
-    }
-  }
+  final String barcode;
+  final String? productName;
+  final String? productImage;
+  final String? subtitle;
+  final VoidCallback? onTap;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Image du produit
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12),
-              bottomLeft: Radius.circular(12),
-            ),
-            child: Image.network(
-              product.imageUrl,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Informations du produit
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  product.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF001F5B),
-                  ),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              // ── Image ───────────────────────────────────────
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: productImage != null && productImage!.isNotEmpty
+                      ? Image.network(
+                          productImage!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _placeholder(),
+                        )
+                      : _placeholder(),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  product.brand,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                const SizedBox(height: 8),
-                Row(
+              ),
+              const SizedBox(width: 14),
+
+              // ── Texte ────────────────────────────────────────
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: _getNutriscoreColor(product.nutriscore),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
                     Text(
-                      'Nutriscore : ${product.nutriscore}',
+                      productName ?? barcode,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.blue,
                       ),
                     ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle!,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.grey3,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-              ],
-            ),
+              ),
+
+              // ── Trailing (étoile, chevron…) ──────────────────
+              if (trailing != null) ...[
+                const SizedBox(width: 8),
+                trailing!,
+              ] else
+                const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.grey2,
+                ),
+            ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _placeholder() {
+    return Container(
+      color: AppColors.grey1,
+      child: const Icon(Icons.fastfood_outlined, color: AppColors.grey2),
     );
   }
 }
