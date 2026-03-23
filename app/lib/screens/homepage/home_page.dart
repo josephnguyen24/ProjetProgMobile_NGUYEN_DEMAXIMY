@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:formation_flutter/model/dummy_product.dart';
+import 'package:formation_flutter/screens/product/product_page.dart';
 import 'package:formation_flutter/widget/product_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +16,37 @@ class _HomePageState extends State<HomePage> {
   bool hasScans = false;
   List<DummyProduct> scannedProducts = dummyProducts;
 
+  Future<void> _scanBarcode() async {
+    try {
+      var result = await BarcodeScanner.scan();
+      String barcode = result.rawContent;
+
+      // Si l'utilisateur a bien scanné un code (non vide) et que le composant est monté
+      if (barcode.isNotEmpty && mounted) {
+        setState(() => hasScans = true); // Affiche l'historique pour le retour
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(barcode: barcode),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Erreur de scan : $e');
+      // Affiche un message d'erreur à l'utilisateur au lieu de ne rien faire
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Impossible d'ouvrir la caméra (Testez-vous sur le Web ?).",
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           if (hasScans)
             IconButton(
               icon: const Icon(Icons.qr_code_scanner, size: 28),
-              onPressed: () {},
+              onPressed: _scanBarcode,
             ),
           IconButton(
             icon: const Icon(Icons.star, size: 28),
@@ -92,12 +125,7 @@ class _HomePageState extends State<HomePage> {
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: () {
-                  // Simule un scan et affiche les données
-                  setState(() {
-                    hasScans = true;
-                  });
-                },
+                onPressed: _scanBarcode,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFDB912),
                   shape: RoundedRectangleBorder(

@@ -60,4 +60,14 @@ final List<DummyProduct> dummyProducts = [
     nutriscore: 'E',
     isFavorite: false,
   ),
+  DummyProduct(
+    id: '5',
+    barcode: '4056489195207',
+    name: 'Salade pâte jambon emmental',
+    brand: 'Select & Go',
+    imageUrl:
+        'https://rappel.conso.gouv.fr/image/07a87502-1268-4ee2-8b10-f588b12f38ac.jpg',
+    nutriscore: 'C',
+    isFavorite: false,
+  ),
 ];

@@ -27,7 +27,7 @@ class RappelFetcher extends ChangeNotifier {
       final result = await PocketBaseClient.instance
           .collection('rappels')
           .getFirstListItem(
-            "identification_lots ~ '${_barcode.replaceAll("'", "\\'")}%'",
+            "identification_lots ~ '${_barcode.replaceAll("'", "\\'")}'",
           );
 
       _state = RappelFetcherFound(Rappel.fromRecord(result));
