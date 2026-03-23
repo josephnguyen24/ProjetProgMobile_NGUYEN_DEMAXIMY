@@ -7,12 +7,18 @@ import 'package:formation_flutter/screens/product/states/error/product_page_erro
 import 'package:formation_flutter/screens/product/states/success/product_page_body.dart';
 import 'package:provider/provider.dart';
 
-class ProductPage extends StatelessWidget {
-  // TODO Rajouter le passage d'un paramètre
-  const ProductPage({super.key});
+class ProductPage extends StatefulWidget {
+  final String barcode;
 
-  // Barcode utilisé pour la démo — à remplacer par le vrai scan
-  static const String _barcode = '5000159484695';
+  const ProductPage({super.key, required this.barcode});
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  int _currentIndex = 0;
+  bool _isFavorite = false; // État local du favori (en attendant PocketBase)
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +29,38 @@ class ProductPage extends StatelessWidget {
       providers: [
         // Fetcher produit OpenFoodFacts
         ChangeNotifierProvider<ProductFetcher>(
-          create: (_) => ProductFetcher(barcode: _barcode),
+          create: (_) => ProductFetcher(barcode: widget.barcode),
         ),
         // 3️⃣ Fetcher rappel PocketBase
         ChangeNotifierProvider<RappelFetcher>(
-          create: (_) => RappelFetcher(barcode: _barcode),
+          create: (_) => RappelFetcher(barcode: widget.barcode),
         ),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info_outline),
+              label: 'Fiche',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt),
+              label: 'Caractéristiques',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.eco_outlined),
+              label: 'Nutrition',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_on),
+              label: 'Tableau',
+            ),
+          ],
+        ),
         body: Stack(
           children: [
             Consumer<ProductFetcher>(
@@ -41,7 +70,9 @@ class ProductPage extends StatelessWidget {
                   ProductFetcherError(error: var err) => ProductPageError(
                     error: err,
                   ),
-                  ProductFetcherSuccess() => ProductPageBody(),
+                  ProductFetcherSuccess() => ProductPageBody(
+                    currentIndex: _currentIndex,
+                  ),
                 };
               },
             ),
@@ -57,9 +88,19 @@ class ProductPage extends StatelessWidget {
             PositionedDirectional(
               top: 0.0,
               end: 0.0,
-              child: _HeaderIcon(
-                icon: AppIcons.share,
-                tooltip: materialLocalizations.shareButtonLabel,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _HeaderIcon(
+                    icon: _isFavorite ? Icons.star : Icons.star_border,
+                    tooltip: 'Favoris',
+                    onPressed: () => setState(() => _isFavorite = !_isFavorite),
+                  ),
+                  _HeaderIcon(
+                    icon: AppIcons.share,
+                    tooltip: materialLocalizations.shareButtonLabel,
+                  ),
+                ],
               ),
             ),
           ],
