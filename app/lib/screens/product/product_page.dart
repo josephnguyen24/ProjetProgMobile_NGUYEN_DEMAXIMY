@@ -9,10 +9,18 @@ import 'package:formation_flutter/screens/product/states/success/recall_banner.d
 import 'package:formation_flutter/screens/rappel/rappel_detail_screen.dart';
 import 'package:provider/provider.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   final String barcode;
 
   const ProductPage({super.key, required this.barcode});
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  int _currentIndex = 0;
+  bool _isFavorite = false; // Gère l'état de l'étoile
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +31,38 @@ class ProductPage extends StatelessWidget {
       providers: [
         // Fetcher produit OpenFoodFacts
         ChangeNotifierProvider<ProductFetcher>(
-          create: (_) => ProductFetcher(barcode: barcode),
+          create: (_) => ProductFetcher(barcode: widget.barcode),
         ),
         // 3️⃣ Fetcher rappel PocketBase
         ChangeNotifierProvider<RappelFetcher>(
-          create: (_) => RappelFetcher(barcode: barcode),
+          create: (_) => RappelFetcher(barcode: widget.barcode),
         ),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info_outline),
+              label: 'Fiche',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt),
+              label: 'Caractéristiques',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.eco_outlined),
+              label: 'Nutrition',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_on),
+              label: 'Tableau',
+            ),
+          ],
+        ),
         body: Stack(
           children: [
             Consumer<ProductFetcher>(
@@ -42,7 +73,10 @@ class ProductPage extends StatelessWidget {
                     context,
                     err,
                   ),
-                  ProductFetcherSuccess() => ProductPageBody(),
+                  // On passe l'onglet actuel au corps de la page !
+                  ProductFetcherSuccess() => ProductPageBody(
+                    currentIndex: _currentIndex,
+                  ),
                 };
               },
             ),
@@ -58,9 +92,19 @@ class ProductPage extends StatelessWidget {
             PositionedDirectional(
               top: 0.0,
               end: 0.0,
-              child: _HeaderIcon(
-                icon: AppIcons.share,
-                tooltip: materialLocalizations.shareButtonLabel,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _HeaderIcon(
+                    icon: _isFavorite ? Icons.star : Icons.star_border,
+                    tooltip: 'Favoris',
+                    onPressed: () => setState(() => _isFavorite = !_isFavorite),
+                  ),
+                  _HeaderIcon(
+                    icon: AppIcons.share,
+                    tooltip: materialLocalizations.shareButtonLabel,
+                  ),
+                ],
               ),
             ),
           ],
