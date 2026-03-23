@@ -2,42 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
-import 'package:formation_flutter/pocketbase/pocketbase_client.dart';
-import 'package:formation_flutter/login_page.dart';
-import 'package:formation_flutter/register_page.dart';
+import 'package:formation_flutter/screens/login/login_page.dart';
+import 'package:formation_flutter/screens/login/register_page.dart';
+import 'package:formation_flutter/screens/product/product_page.dart';
+import 'package:formation_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
-  // INIT
-
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // TESTS D'INTÉGRATION POCKETBASE
-  final pb = PocketBaseClient.instance;
-
-  print("TEST POCKETBASE ");
-
-  try {
-    // Tentative de récupération d'un seul enregistrement dans 'rappels'
-    final result = await pb.collection('rappels').getList(page: 1, perPage: 1);
-
-    if (result.items.isNotEmpty) {
-      print("✅ SUCCÈS : Donnée trouvée dans la collection 'rappels' :");
-      print(result.items.first.data);
-    } else {
-      print(
-        "⚠️ OK : Connecté à PocketBase, mais la collection 'rappels' est vide.",
-      );
-    }
-  } catch (e) {
-    print("❌ ERREUR POCKETBASE : Impossible de contacter le serveur.");
-    print("Détails de l'erreur : $e");
-    print(
-      "💡 Astuce : Vérifiez que l'URL dans pocketbase_client.dart est correcte pour votre appareil (ex: 10.0.2.2 pour Android).",
-    );
-  }
-  // --- FIN DU TEST ---
-
-  runApp(const MyApp());
+void main(){
+  runApp(
+    // AuthService disponible dans tout l'arbre de widgets
+    ChangeNotifierProvider(
+      create: (_) => AuthService(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,17 +24,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Open Food Facts',
+      title: 'Yukka',
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         extensions: [OffThemeExtension.defaultValues()],
         fontFamily: 'Avenir',
-        dividerTheme: const DividerThemeData(
-          color: AppColors.grey2,
-          space: 1.0,
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        dividerTheme: DividerThemeData(color: AppColors.grey2, space: 1.0),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF001F5B)),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           showSelectedLabels: true,
           showUnselectedLabels: true,
@@ -69,12 +45,20 @@ class MyApp extends StatelessWidget {
           indicatorColor: AppColors.blue,
         ),
       ),
-      debugShowCheckedModeBanner: false,
-      // Nous définissons une route initiale et un gestionnaire de routes
-      initialRoute: '/',
+
+      // ── Page de démarrage ─────────────────────────────────────
+      // Si l'utilisateur est déjà connecté (token valide) → /home
+      // Sinon → /login
+      home: Consumer<AuthService>(
+        builder: (_, auth, __) =>
+            auth.isLoggedIn ? const ProductPage() : const LoginPage(),
+      ),
+
+      // ── Routes nommées ────────────────────────────────────────
       routes: {
-        '/': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
+        '/login':    (_) => const LoginPage(),
+        '/register': (_) => const RegisterPage(),
+        '/home':     (_) => const ProductPage(),
       },
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/custom_button.dart';
 import 'package:formation_flutter/custom_input_field.dart';
+import 'package:formation_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,20 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Contrôleurs pour récupérer le texte
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  void _loginUser() {
-    // Cette fonction sera appelée pour se connecter.
-    // Pour l'instant, on se contente d'afficher les données.
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Connexion pour : $email')));
-    // Ici, vous ajouterez la logique d'authentification réelle.
-  }
 
   @override
   void dispose() {
@@ -32,20 +22,49 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _loginUser() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez remplir tous les champs.')),
+      );
+      return;
+    }
+
+    final authService = context.read<AuthService>();
+    final success = await authService.login(email, password);
+
+    if (!mounted) return;
+
+    if (success) {
+      // Redirige vers la page principale en remplaçant la pile
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authService.errorMessage ?? 'Erreur de connexion.'),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.watch<AuthService>().isLoading;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Connexion',
           style: TextStyle(color: Color(0xFF001F5B)),
         ),
-        automaticallyImplyLeading:
-            false, // Pas de bouton retour sur l'écran d'accueil
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: SingleChildScrollView(
-          // Pour éviter les problèmes d'espace sur petit écran
           padding: const EdgeInsets.all(30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -64,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.email,
                 hintText: 'Adresse email',
                 controller: _emailController,
+                textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 15),
               CustomInputField(
@@ -71,17 +91,21 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Mot de passe',
                 isPassword: true,
                 controller: _passwordController,
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => _loginUser(),
               ),
               const SizedBox(height: 40),
               CustomButton(
                 text: 'Créer un compte',
-                onPressed: () {
-                  // Navigation vers la page d'inscription
-                  Navigator.pushNamed(context, '/register');
-                },
+                onPressed: () => Navigator.pushNamed(context, '/register'),
+                isLoading: false,
               ),
               const SizedBox(height: 15),
-              CustomButton(text: 'Se connecter', onPressed: _loginUser),
+              CustomButton(
+                text: 'Se connecter',
+                onPressed: _loginUser,
+                isLoading: isLoading,
+              ),
             ],
           ),
         ),
