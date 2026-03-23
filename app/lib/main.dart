@@ -9,6 +9,7 @@ import 'package:formation_flutter/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 void main(){
+
   runApp(
     // AuthService disponible dans tout l'arbre de widgets
     ChangeNotifierProvider(
