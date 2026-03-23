@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/res/app_colors.dart';
+import 'package:formation_flutter/model/dummy_product.dart';
+import 'package:formation_flutter/screens/product/product_page.dart';
+import 'package:formation_flutter/screens/product/product_page.dart';
 
 /// Carte produit réutilisable dans l'historique et les favoris.
 ///
@@ -7,93 +9,111 @@ import 'package:formation_flutter/res/app_colors.dart';
 /// [onTap] est appelé quand l'utilisateur tape sur la carte.
 /// [trailing] permet d'ajouter un widget en fin de ligne (ex: bouton étoile).
 class ProductCard extends StatelessWidget {
-  const ProductCard({
-    super.key,
-    required this.barcode,
-    this.productName,
-    this.productImage,
-    this.subtitle,
-    this.onTap,
-    this.trailing,
-  });
+  final DummyProduct product;
 
-  final String barcode;
-  final String? productName;
-  final String? productImage;
-  final String? subtitle;
-  final VoidCallback? onTap;
-  final Widget? trailing;
+  const ProductCard({super.key, required this.product});
+
+  Color _getNutriscoreColor(String score) {
+    switch (score.toUpperCase()) {
+      case 'A':
+        return const Color(0xFF038141); // Vert foncé
+      case 'B':
+        return const Color(0xFF85BB2F); // Vert clair
+      case 'C':
+        return const Color(0xFFFECB02); // Jaune
+      case 'D':
+        return const Color(0xFFEE8100); // Orange
+      case 'E':
+        return const Color(0xFFE63E11); // Rouge
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Row(
-            children: [
-              // ── Image ───────────────────────────────────────
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: productImage != null && productImage!.isNotEmpty
-                      ? Image.network(
-                          productImage!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _placeholder(),
-                        )
-                      : _placeholder(),
-                ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(barcode: product.barcode),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Image du produit
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
               ),
-              const SizedBox(width: 14),
-
-              // ── Texte ────────────────────────────────────────
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      productName ?? barcode,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.blue,
-                      ),
+              child: Image.network(
+                product.imageUrl,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Informations du produit
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF001F5B),
                     ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 4),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    product.brand,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: _getNutriscoreColor(product.nutriscore),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        subtitle!,
+                        'Nutriscore : ${product.nutriscore}',
                         style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.grey3,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
-                  ],
-                ),
+                  ),
+                ],
               ),
-
-              // ── Trailing (étoile, chevron…) ──────────────────
-              if (trailing != null) ...[
-                const SizedBox(width: 8),
-                trailing!,
-              ] else
-                const Icon(
-                  Icons.chevron_right,
-                  color: AppColors.grey2,
-                ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

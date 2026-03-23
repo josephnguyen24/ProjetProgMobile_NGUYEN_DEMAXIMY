@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/model/product.dart';
-import 'package:formation_flutter/res/app_icons.dart';
 import 'package:formation_flutter/screens/product/product_fetcher.dart';
 import 'package:formation_flutter/screens/product/rappel_fetcher.dart';
+import 'package:formation_flutter/screens/rappel/rappel_detail_screen.dart';
 import 'package:formation_flutter/screens/product/states/success/product_header.dart';
 import 'package:formation_flutter/screens/product/states/success/recall_banner.dart';
 import 'package:formation_flutter/screens/product/states/success/tabs/product_tab0.dart';
@@ -12,26 +11,13 @@ import 'package:formation_flutter/screens/product/states/success/tabs/product_ta
 import 'package:formation_flutter/screens/product/states/success/tabs/product_tab3.dart';
 import 'package:provider/provider.dart';
 
-class ProductPageBody extends StatefulWidget {
-  const ProductPageBody({super.key});
+class ProductPageBody extends StatelessWidget {
+  final int currentIndex;
 
-  @override
-  State<ProductPageBody> createState() => _ProductPageBodyState();
-}
-
-class _ProductPageBodyState extends State<ProductPageBody> {
-  late ProductDetailsCurrentTab _tab;
-
-  @override
-  void initState() {
-    super.initState();
-    _tab = ProductDetailsCurrentTab.summary;
-  }
+  const ProductPageBody({super.key, required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-
     return Provider<Product>(
       create: (_) =>
           (context.read<ProductFetcher>().state as ProductFetcherSuccess)
@@ -50,7 +36,18 @@ class _ProductPageBodyState extends State<ProductPageBody> {
                     builder: (_, fetcher, __) {
                       final state = fetcher.state;
                       if (state is RappelFetcherFound) {
-                        return RecallBanner(rappel: state.rappel);
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RappelDetailScreen(rappel: state.rappel),
+                              ),
+                            );
+                          },
+                          child: RecallBanner(rappel: state.rappel),
+                        );
                       }
                       return const SizedBox.shrink();
                     },
@@ -69,20 +66,6 @@ class _ProductPageBodyState extends State<ProductPageBody> {
               ],
             ),
           ),
-          BottomNavigationBar(
-            currentIndex: _tab.index,
-            onTap: (int position) => setState(
-              () => _tab = ProductDetailsCurrentTab.values[position],
-            ),
-            items: ProductDetailsCurrentTab.values
-                .map(
-                  (ProductDetailsCurrentTab tab) => BottomNavigationBarItem(
-                    icon: Icon(tab.icon),
-                    label: tab.label(localizations),
-                  ),
-                )
-                .toList(growable: false),
-          ),
         ],
       ),
     );
@@ -91,43 +74,11 @@ class _ProductPageBodyState extends State<ProductPageBody> {
   Widget _getBody() {
     return Stack(
       children: <Widget>[
-        Offstage(
-          offstage: _tab != ProductDetailsCurrentTab.summary,
-          child: ProductTab0(),
-        ),
-        Offstage(
-          offstage: _tab != ProductDetailsCurrentTab.info,
-          child: ProductTab1(),
-        ),
-        Offstage(
-          offstage: _tab != ProductDetailsCurrentTab.nutrition,
-          child: ProductTab2(),
-        ),
-        Offstage(
-          offstage: _tab != ProductDetailsCurrentTab.nutritionalValues,
-          child: ProductTab3(),
-        ),
+        Offstage(offstage: currentIndex != 0, child: ProductTab0()),
+        Offstage(offstage: currentIndex != 1, child: ProductTab1()),
+        Offstage(offstage: currentIndex != 2, child: ProductTab2()),
+        Offstage(offstage: currentIndex != 3, child: ProductTab3()),
       ],
     );
   }
-}
-
-enum ProductDetailsCurrentTab {
-  summary(AppIcons.tab_barcode),
-  info(AppIcons.tab_fridge),
-  nutrition(AppIcons.tab_nutrition),
-  nutritionalValues(AppIcons.tab_array);
-
-  const ProductDetailsCurrentTab(this.icon);
-
-  final IconData icon;
-
-  String label(AppLocalizations appLocalizations) => switch (this) {
-    ProductDetailsCurrentTab.summary => appLocalizations.product_tab_summary,
-    ProductDetailsCurrentTab.info => appLocalizations.product_tab_properties,
-    ProductDetailsCurrentTab.nutrition =>
-      appLocalizations.product_tab_nutrition,
-    ProductDetailsCurrentTab.nutritionalValues =>
-      appLocalizations.product_tab_nutrition_facts,
-  };
 }
