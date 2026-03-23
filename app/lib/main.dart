@@ -30,6 +30,19 @@ class MyApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(
+          0xFFF5F6F8,
+        ), // Fond grisé pour cartes
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFF5F6F8),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Color(0xFF001F5B)),
+          titleTextStyle: TextStyle(
+            color: Color(0xFF001F5B),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         extensions: [OffThemeExtension.defaultValues()],
         fontFamily: 'Avenir',
         dividerTheme: DividerThemeData(color: AppColors.grey2, space: 1.0),

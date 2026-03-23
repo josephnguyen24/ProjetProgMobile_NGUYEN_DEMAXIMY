@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/custom_button.dart';
-import 'package:formation_flutter/custom_input_field.dart';
+import 'package:formation_flutter/widget/custom_input_field.dart';
 import 'package:formation_flutter/services/auth_service.dart';
+import 'package:formation_flutter/widget/custom_input_field.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> _loginUser() async {
+  Future<void> _registerUser() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
@@ -33,18 +34,27 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Le mot de passe doit faire au moins 8 caractères.'),
+        ),
+      );
+      return;
+    }
+
     final authService = context.read<AuthService>();
-    final success = await authService.login(email, password);
+    final success = await authService.register(email, password);
 
     if (!mounted) return;
 
     if (success) {
-      // Redirige vers la page principale en remplaçant la pile
+      // Inscription + connexion automatique → page principale
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authService.errorMessage ?? 'Erreur de connexion.'),
+          content: Text(authService.errorMessage ?? 'Erreur d\'inscription.'),
           backgroundColor: Colors.red.shade700,
         ),
       );
@@ -58,10 +68,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Connexion',
+          'Inscription',
           style: TextStyle(color: Color(0xFF001F5B)),
         ),
-        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -71,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Connexion',
+                'Inscription',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -88,22 +97,16 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 15),
               CustomInputField(
                 icon: Icons.lock,
-                hintText: 'Mot de passe',
+                hintText: 'Mot de passe (8 caractères min.)',
                 isPassword: true,
                 controller: _passwordController,
                 textInputAction: TextInputAction.done,
-                onSubmitted: (_) => _loginUser(),
+                onSubmitted: (_) => _registerUser(),
               ),
               const SizedBox(height: 40),
               CustomButton(
-                text: 'Créer un compte',
-                onPressed: () => Navigator.pushNamed(context, '/register'),
-                isLoading: false,
-              ),
-              const SizedBox(height: 15),
-              CustomButton(
-                text: 'Se connecter',
-                onPressed: _loginUser,
+                text: "S'inscrire",
+                onPressed: _registerUser,
                 isLoading: isLoading,
               ),
             ],
