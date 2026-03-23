@@ -50,4 +50,14 @@ final List<DummyProduct> dummyProducts = [
     nutriscore: 'B',
     isFavorite: true,
   ),
+  DummyProduct(
+    id: '4',
+    barcode: '3383883752028',
+    name: 'Ballotine pintade aux cèpes',
+    brand: 'Leguelier',
+    imageUrl:
+        'https://rappel.conso.gouv.fr/image/3df84c8a-4c98-476c-b44f-7d6ffb7ace01.jpg',
+    nutriscore: 'E',
+    isFavorite: false,
+  ),
 ];

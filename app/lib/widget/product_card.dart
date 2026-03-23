@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/model/dummy_product.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
+import 'package:formation_flutter/screens/product/product_page.dart';
 
 class ProductCard extends StatelessWidget {
   final DummyProduct product;
@@ -10,15 +11,15 @@ class ProductCard extends StatelessWidget {
   Color _getNutriscoreColor(String score) {
     switch (score.toUpperCase()) {
       case 'A':
-        return const Color(0xFF008B45); // Vert foncé
+        return const Color(0xFF038141); // Vert foncé
       case 'B':
-        return const Color(0xFF85C441); // Vert clair
+        return const Color(0xFF85BB2F); // Vert clair
       case 'C':
-        return const Color(0xFFFFC107); // Jaune
+        return const Color(0xFFFECB02); // Jaune
       case 'D':
-        return const Color(0xFFFF8C00); // Orange
+        return const Color(0xFFEE8100); // Orange
       case 'E':
-        return const Color(0xFFE53935); // Rouge
+        return const Color(0xFFE63E11); // Rouge
       default:
         return Colors.grey;
     }

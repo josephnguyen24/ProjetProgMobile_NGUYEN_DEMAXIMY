@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formation_flutter/model/product.dart';
 import 'package:formation_flutter/screens/product/product_fetcher.dart';
 import 'package:formation_flutter/screens/product/rappel_fetcher.dart';
+import 'package:formation_flutter/screens/rappel/rappel_detail_screen.dart';
 import 'package:formation_flutter/screens/product/states/success/product_header.dart';
 import 'package:formation_flutter/screens/product/states/success/recall_banner.dart';
 import 'package:formation_flutter/screens/product/states/success/tabs/product_tab0.dart';
@@ -35,7 +36,18 @@ class ProductPageBody extends StatelessWidget {
                     builder: (_, fetcher, __) {
                       final state = fetcher.state;
                       if (state is RappelFetcherFound) {
-                        return RecallBanner(rappel: state.rappel);
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RappelDetailScreen(rappel: state.rappel),
+                              ),
+                            );
+                          },
+                          child: RecallBanner(rappel: state.rappel),
+                        );
                       }
                       return const SizedBox.shrink();
                     },
