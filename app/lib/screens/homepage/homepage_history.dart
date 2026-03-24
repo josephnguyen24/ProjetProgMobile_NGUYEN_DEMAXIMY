@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/res/app_icons.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
+import 'package:formation_flutter/screens/homepage/homepage_empty.dart';
 import 'package:formation_flutter/services/auth_service.dart';
 import 'package:formation_flutter/services/favorite_service.dart';
 import 'package:formation_flutter/services/scan_service.dart';
@@ -22,29 +23,37 @@ class HomePageHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final scans = context.watch<ScanService>().scans;
+    final scanService = context.watch<ScanService>();
+    final scans = scanService.scans;
     final dateFormat = DateFormat('dd/MM/yyyy', 'fr_FR');
 
     Widget body;
 
-    if (scans.isEmpty) {
+    if (scanService.isLoading) {
       body = const Center(child: CircularProgressIndicator());
+    } else if (scans.isEmpty) {
+      body = HomePageEmpty(
+        onScan: () {
+          // TODO: action scan si besoin
+        },
+      );
     } else {
       body = ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 12),
         itemCount: scans.length,
         itemBuilder: (context, index) {
           final scan = scans[index];
-          final product = Product(
-          id: scan.id ?? '',
-          barcode: scan.barcode,
-          name: scan.productName ?? '',
-          brand: '', // pas dispo → vide
-          imageUrl: scan.productImage ?? '',
-          nutriscore: 'unknown', // pas dispo → valeur par défaut
-        );
 
-        return ProductCard(product: product);
+          final product = Product(
+            id: scan.id ?? '',
+            barcode: scan.barcode,
+            name: scan.productName ?? '',
+            brand: '',
+            imageUrl: scan.productImage ?? '',
+            nutriscore: 'unknown',
+          );
+
+          return ProductCard(product: product);
         },
       );
     }

@@ -13,6 +13,10 @@ class ScanService extends ChangeNotifier {
   bool _isLoading = false;
   bool _loaded = false;
 
+  ScanService() {
+    load(); 
+  }
+
   List<ScanRecord> get scans => _scans;
   bool get hasScans => _scans.isNotEmpty;
   bool get isLoading => _isLoading;
