@@ -5,11 +5,6 @@ import 'package:formation_flutter/services/auth_service.dart';
 import 'package:formation_flutter/services/favorite_service.dart';
 import 'package:formation_flutter/services/scan_service.dart';
 
-
-
-
-
-
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController    = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -31,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _loginUser() async {
-    final email    = _emailController.text.trim();
+    final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
@@ -76,8 +71,10 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Connexion',
-            style: TextStyle(color: Color(0xFF001F5B))),
+        title: const Text(
+          'Connexion',
+          style: TextStyle(color: Color(0xFF080040)),
+        ),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -89,9 +86,10 @@ class _LoginPageState extends State<LoginPage> {
               const Text(
                 'Connexion',
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF001F5B),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF080040),
+                  letterSpacing: -0.48,
                 ),
               ),
               const SizedBox(height: 50),
