@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/model/dummy_product.dart';
+import 'package:formation_flutter/model/product_model.dart';
+import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
 
@@ -9,7 +10,7 @@ import 'package:formation_flutter/screens/product/product_page.dart';
 /// [onTap] est appelé quand l'utilisateur tape sur la carte.
 /// [trailing] permet d'ajouter un widget en fin de ligne (ex: bouton étoile).
 class ProductCard extends StatelessWidget {
-  final DummyProduct product;
+  final Product product;
 
   const ProductCard({super.key, required this.product});
 

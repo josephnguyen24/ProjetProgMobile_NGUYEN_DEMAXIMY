@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 import 'package:provider/provider.dart';
 
 class ProductTab1 extends StatelessWidget {
@@ -8,7 +8,7 @@ class ProductTab1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 1. On récupère le vrai produit depuis l'API via le Provider
-    final product = context.read<Product>();
+    final product = context.read<ProductOld>();
 
     // On utilise directement les bons types définis dans le modèle Product
     final List<String> ingredients = product.ingredients ?? [];

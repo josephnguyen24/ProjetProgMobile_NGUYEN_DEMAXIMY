@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/api/open_food_facts_api.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 
 class ProductFetcher extends ChangeNotifier {
   ProductFetcher({required String barcode})
@@ -17,7 +17,7 @@ class ProductFetcher extends ChangeNotifier {
     notifyListeners();
 
     try {
-      Product product = await OpenFoodFactsAPI().getProduct(_barcode);
+      ProductOld product = await OpenFoodFactsAPI().getProduct(_barcode);
       _state = ProductFetcherSuccess(product);
     } catch (error) {
       _state = ProductFetcherError(error);
@@ -36,7 +36,7 @@ class ProductFetcherLoading extends ProductFetcherState {}
 class ProductFetcherSuccess extends ProductFetcherState {
   ProductFetcherSuccess(this.product);
 
-  final Product product;
+  final ProductOld product;
 }
 
 class ProductFetcherError extends ProductFetcherState {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 import 'package:formation_flutter/screens/product/product_fetcher.dart';
 import 'package:formation_flutter/screens/product/rappel_fetcher.dart';
 import 'package:formation_flutter/screens/rappel/rappel_detail_screen.dart';
@@ -18,7 +18,7 @@ class ProductPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<Product>(
+    return Provider<ProductOld>(
       create: (_) =>
           (context.read<ProductFetcher>().state as ProductFetcherSuccess)
               .product,

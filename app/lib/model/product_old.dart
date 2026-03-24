@@ -1,5 +1,5 @@
 // ignore_for_file: constant_identifier_names
-class Product {
+class ProductOld {
   final String barcode;
   final String? name;
   final String? altName;
@@ -25,7 +25,7 @@ class Product {
   final ProductAnalysis? isVegan;
   final ProductAnalysis? isVegetarian;
 
-  Product({
+  ProductOld({
     required this.barcode,
     this.name,
     this.altName,
@@ -50,8 +50,8 @@ class Product {
     this.isVegetarian,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+  factory ProductOld.fromJson(Map<String, dynamic> json) {
+    return ProductOld(
       barcode: json['barcode'] as String,
       name: json['name'] as String?,
       altName: json['altName'] as String?,
@@ -315,7 +315,7 @@ enum ProductAnalysis {
   }
 }
 
-Product generateProduct() => Product(
+ProductOld generateProduct() => ProductOld(
   barcode: '1234567890',
   name: 'Nutella',
   altName: 'Product Alt Name',

@@ -6,6 +6,7 @@ import 'package:formation_flutter/services/auth_service.dart';
 import 'package:formation_flutter/services/favorite_service.dart';
 import 'package:formation_flutter/services/scan_service.dart';
 import 'package:formation_flutter/widget/product_card.dart';
+import 'package:formation_flutter/model/product_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -34,18 +35,16 @@ class HomePageHistoryScreen extends StatelessWidget {
         itemCount: scans.length,
         itemBuilder: (context, index) {
           final scan = scans[index];
-          return ProductCard(
-            barcode:      scan.barcode,
-            productName:  scan.productName,
-            productImage: scan.productImage,
-            subtitle:     'Scanné le ${dateFormat.format(scan.created)}',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ProductPage(barcode: scan.barcode),
-              ),
-            ),
-          );
+          final product = Product(
+          id: scan.id ?? '',
+          barcode: scan.barcode,
+          name: scan.productName ?? '',
+          brand: '', // pas dispo → vide
+          imageUrl: scan.productImage ?? '',
+          nutriscore: 'unknown', // pas dispo → valeur par défaut
+        );
+
+        return ProductCard(product: product);
         },
       );
     }

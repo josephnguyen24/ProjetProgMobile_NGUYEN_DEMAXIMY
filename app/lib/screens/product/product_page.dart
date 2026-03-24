@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/res/app_icons.dart';
 import 'package:formation_flutter/screens/product/product_fetcher.dart';
+import 'package:formation_flutter/screens/product/rappel_fetcher.dart';
 import 'package:formation_flutter/screens/product/states/empty/product_page_empty.dart';
 import 'package:formation_flutter/screens/product/states/error/product_page_error.dart';
 import 'package:formation_flutter/screens/product/states/success/product_page_body.dart';
@@ -104,7 +105,7 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   _HeaderIcon(
                     icon: AppIcons.share,
-                    tooltip: materialLocalizations.shareButtonLabel,
+                    tooltip: 'Partager',
                   ),
                 ],
               ),

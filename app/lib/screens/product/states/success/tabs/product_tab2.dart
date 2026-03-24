@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 import 'package:provider/provider.dart';
 
 enum NutrientLevel { low, moderate, high, unknown }
@@ -23,7 +23,7 @@ class ProductTab2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = context.read<Product>();
+    final product = context.read<ProductOld>();
 
     // On va chercher les données exactement là où elles sont dans votre modèle Product
     final facts = product.nutritionFacts;

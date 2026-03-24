@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/l10n/app_localizations.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ class ProductTab3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = context.read<Product>();
+    final ProductOld product = context.read<ProductOld>();
     if (product.nutritionFacts == null) {
       return const SizedBox.shrink();
     }
@@ -188,4 +188,4 @@ class _NutritionFactsTitle extends StatelessWidget {
   }
 }
 
-extension ProductNutrimentsExtension on Product {}
+extension ProductNutrimentsExtension on ProductOld {}

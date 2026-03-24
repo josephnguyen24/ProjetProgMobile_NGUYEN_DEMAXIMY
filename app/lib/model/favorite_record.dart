@@ -1,6 +1,6 @@
 import 'package:pocketbase/pocketbase.dart';
 
-/// Représente un produit mis en favori par l'utilisateur.
+/// Table de liaison User <-> Product
 class FavoriteRecord {
   const FavoriteRecord({
     required this.id,
@@ -13,15 +13,17 @@ class FavoriteRecord {
   final String id;
   final String userId;
   final String barcode;
+
+  // cache optionnel (utile pour éviter requête produit)
   final String? productName;
   final String? productImage;
 
   factory FavoriteRecord.fromRecord(RecordModel r) {
     return FavoriteRecord(
-      id:           r.id,
-      userId:       r.getStringValue('user_id'),
-      barcode:      r.getStringValue('barcode'),
-      productName:  r.getStringValue('product_name').nullIfEmpty,
+      id: r.id,
+      userId: r.getStringValue('user_id'),
+      barcode: r.getStringValue('barcode'),
+      productName: r.getStringValue('product_name').nullIfEmpty,
       productImage: r.getStringValue('product_image').nullIfEmpty,
     );
   }

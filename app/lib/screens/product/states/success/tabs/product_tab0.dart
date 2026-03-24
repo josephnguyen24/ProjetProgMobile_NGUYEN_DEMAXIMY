@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/l10n/app_localizations.dart';
-import 'package:formation_flutter/model/product.dart';
+import 'package:formation_flutter/model/product_old.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_icons.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
@@ -37,7 +37,7 @@ class _Scores extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = context.read<Product>();
+    final ProductOld product = context.read<ProductOld>();
 
     return DefaultTextStyle(
       style: context.theme.altText,
@@ -243,7 +243,7 @@ class _Info extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final Product product = context.read<Product>();
+    final ProductOld product = context.read<ProductOld>();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
