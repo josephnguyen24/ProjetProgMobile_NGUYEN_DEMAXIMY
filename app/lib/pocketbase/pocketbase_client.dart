@@ -9,7 +9,7 @@ import 'package:pocketbase/pocketbase.dart';
 class PocketBaseClient {
   PocketBaseClient._();
 
-  static const String baseUrl = 'http://127.0.0.1:8090';
+  static const String baseUrl = 'http://62.129.14.125:8090';
 
-  static final PocketBase instance = PocketBase(baseUrl);
+  static final PocketBase instance = PocketBase("http://192.168.50.133:8090");
 }

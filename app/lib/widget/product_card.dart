@@ -2,30 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:formation_flutter/model/product_model.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
-import 'package:formation_flutter/screens/product/product_page.dart';
 
 /// Carte produit réutilisable dans l'historique et les favoris.
 ///
-/// Fournissez [barcode], [productName] et optionnellement [productImage].
-/// [onTap] est appelé quand l'utilisateur tape sur la carte.
-/// [trailing] permet d'ajouter un widget en fin de ligne (ex: bouton étoile).
+/// Version unifiée basée sur ProductModel.
+/// Supporte :
 class ProductCard extends StatelessWidget {
   final ProductModel product;
+  final VoidCallback? onTap;
+  final String? subtitle;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.onTap,
+    this.subtitle,
+  });
 
   Color _getNutriscoreColor(String score) {
     switch (score.toUpperCase()) {
       case 'A':
-        return const Color(0xFF038141); // Vert foncé
+        return const Color(0xFF038141);
       case 'B':
-        return const Color(0xFF85BB2F); // Vert clair
+        return const Color(0xFF85BB2F);
       case 'C':
-        return const Color(0xFFFECB02); // Jaune
+        return const Color(0xFFFECB02);
       case 'D':
-        return const Color(0xFFEE8100); // Orange
+        return const Color(0xFFEE8100);
       case 'E':
-        return const Color(0xFFE63E11); // Rouge
+        return const Color(0xFFE63E11);
       default:
         return Colors.grey;
     }
@@ -34,14 +39,16 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductPage(barcode: product.barcode),
-          ),
-        );
-      },
+      onTap: onTap ??
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ProductPage(barcode: product.barcode),
+              ),
+            );
+          },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
@@ -57,64 +64,81 @@ class ProductCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Image du produit
+            // ─── Image ───────────────────────────────────────
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 bottomLeft: Radius.circular(12),
               ),
-              child: Image.network(
-                product.imageUrl,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.grey[200],
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      color: Colors.grey,
-                    ),
-                  );
-                },
-              ),
+              child: product.imageUrl.isNotEmpty
+                  ? Image.network(
+                      product.imageUrl,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _placeholder(),
+                    )
+                  : _placeholder(),
             ),
+
             const SizedBox(width: 16),
-            // Informations du produit
+
+            // ─── Infos ───────────────────────────────────────
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    product.name,
+                    product.name.isNotEmpty
+                        ? product.name
+                        : product.barcode,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF001F5B),
                     ),
                   ),
+
                   const SizedBox(height: 4),
-                  Text(
-                    product.brand,
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
+
+                  if (product.brand.isNotEmpty)
+                    Text(
+                      product.brand,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+
+                  // ─── Subtitle (ex: date scan) ────────────────
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle!,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+
                   const SizedBox(height: 8),
+
                   Row(
                     children: [
                       Container(
                         width: 12,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: _getNutriscoreColor(product.nutriscore),
+                          color:
+                              _getNutriscoreColor(product.nutriscore),
                           shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Nutriscore : ${product.nutriscore}',
+                        product.nutriscore.isNotEmpty
+                            ? 'Nutriscore : ${product.nutriscore}'
+                            : 'Nutriscore inconnu',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -133,6 +157,8 @@ class ProductCard extends StatelessWidget {
 
   Widget _placeholder() {
     return Container(
+      width: 100,
+      height: 100,
       color: AppColors.grey1,
       child: const Icon(Icons.fastfood_outlined, color: AppColors.grey2),
     );

@@ -13,30 +13,32 @@ import 'package:provider/provider.dart';
 
 /// Écran d'historique des scans, trié du plus récent au plus ancien.
 ///
-/// Peut être affiché avec ou sans AppBar propre ([showAppBar]).
-/// Lorsque [showAppBar] est false, l'AppBar doit être fournie par le parent.
+/// [showAppBar] : si false, pas de Scaffold ni AppBar propre.
+///               Le parent (HomePage) fournit l'AppBar.
+/// [onScan]    : callback pour le bouton scanner (fourni par HomePage).
 class HomePageHistoryScreen extends StatelessWidget {
-  const HomePageHistoryScreen({super.key, this.showAppBar = true});
+  const HomePageHistoryScreen({
+    super.key,
+    this.showAppBar = true,
+    this.onScan,
+  });
 
   final bool showAppBar;
+  final VoidCallback? onScan;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final scanService = context.watch<ScanService>();
-    final scans = scanService.scans;
-    final dateFormat = DateFormat('dd/MM/yyyy', 'fr_FR');
+    final scanService   = context.watch<ScanService>();
+    final scans         = scanService.scans;
+    final dateFormat    = DateFormat('dd/MM/yyyy', 'fr_FR');
 
     Widget body;
 
     if (scanService.isLoading) {
       body = const Center(child: CircularProgressIndicator());
     } else if (scans.isEmpty) {
-      body = HomePageEmpty(
-        onScan: () {
-          // TODO: action scan si besoin
-        },
-      );
+      body = HomePageEmpty(onScan: onScan);
     } else {
       body = ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -45,21 +47,32 @@ class HomePageHistoryScreen extends StatelessWidget {
           final scan = scans[index];
 
           final product = ProductModel(
-            id: scan.id ?? '',
-            barcode: scan.barcode,
-            name: scan.productName ?? '',
-            brand: '',
-            imageUrl: scan.productImage ?? '',
-            nutriscore: 'unknown',
+            id:        scan.id,
+            barcode:   scan.barcode,
+            name:      scan.productName ?? '',
+            brand:     '',
+            imageUrl:  scan.productImage ?? '',
+            nutriscore: '',
           );
 
-          return ProductCard(product: product);
+          return ProductCard(
+            product: product,
+            subtitle: 'Scanné le ${dateFormat.format(scan.created)}',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductPage(barcode: product.barcode),
+              ),
+            ),
+          );
         },
       );
     }
 
+    // Mode sans AppBar : utilisé quand HomePage wrap ce widget
     if (!showAppBar) return body;
 
+    // Mode autonome (route /history directe)
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.my_scans_screen_title),
@@ -67,7 +80,7 @@ class HomePageHistoryScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: onScan,
             icon: const Padding(
               padding: EdgeInsetsDirectional.only(end: 4),
               child: Icon(AppIcons.barcode),

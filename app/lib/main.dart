@@ -3,8 +3,8 @@ import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
 import 'package:formation_flutter/screens/favorites/favorites_page.dart';
+import 'package:formation_flutter/screens/homepage/home_page.dart';
 import 'package:formation_flutter/screens/homepage/homepage_history.dart';
-import 'package:formation_flutter/screens/homepage/homepage_screen.dart';
 import 'package:formation_flutter/screens/auth/login_page.dart';
 import 'package:formation_flutter/screens/auth/register_page.dart';
 import 'package:formation_flutter/services/auth_service.dart';
@@ -56,17 +56,16 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // ── Page d'accueil selon l'état d'authentification ─────────
+      // Redirige selon l'état d'authentification
       home: Consumer<AuthService>(
         builder: (_, auth, __) =>
-            auth.isLoggedIn ? const HomePageScreen() : const LoginPage(),
+            auth.isLoggedIn ? const HomePage() : const LoginPage(),
       ),
 
-      // ── Routes nommées ─────────────────────────────────────────
       routes: {
         '/login':     (_) => const LoginPage(),
         '/register':  (_) => const RegisterPage(),
-        '/home':      (_) => const HomePageScreen(),
+        '/home':      (_) => const HomePage(),          // ← HomePage (fusionné)
         '/history':   (_) => const HomePageHistoryScreen(),
         '/favorites': (_) => const FavoritesPage(),
       },
