@@ -70,7 +70,10 @@ class _LoginPageState extends State<LoginPage> {
     final isLoading = context.watch<AuthService>().isLoading;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
           'Connexion',
           style: TextStyle(color: Color(0xFF080040)),

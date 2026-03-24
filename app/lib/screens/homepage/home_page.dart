@@ -97,12 +97,25 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final scanService = context.watch<ScanService>();
-    final hasScans    = scanService.hasScans;
-    final isLoading   = scanService.isLoading;
+    final hasScans = scanService.hasScans;
+    final isLoading = scanService.isLoading;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Mes scans'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        iconTheme: const IconThemeData(color: Color(0xFF080040)),
+        title: const Text(
+          'Mes scans',
+          style: TextStyle(
+            color: Color(0xFF080040),
+            fontSize: 17,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.41,
+          ),
+        ),
         automaticallyImplyLeading: false,
         actions: [
           // Bouton scanner visible seulement quand il y a déjà des scans
@@ -138,13 +151,11 @@ class _HomePageState extends State<HomePage> {
       body: isLoading
           // ── Chargement initial ──────────────────────────────────
           ? const Center(child: CircularProgressIndicator())
-
           // ── Historique vide ────────────────────────────────────
           : !hasScans
-              ? HomePageEmpty(onScan: _scanBarcode)
-
-              // ── Historique avec scans ──────────────────────────
-              : HomePageHistoryScreen(showAppBar: false),
+          ? HomePageEmpty(onScan: _scanBarcode)
+          // ── Historique avec scans ──────────────────────────
+          : HomePageHistoryScreen(showAppBar: false),
     );
   }
 }

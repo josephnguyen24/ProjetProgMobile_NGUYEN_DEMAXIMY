@@ -65,10 +65,14 @@ class _RegisterPageState extends State<RegisterPage> {
     final isLoading = context.watch<AuthService>().isLoading;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF080040)),
         title: const Text(
           'Inscription',
-          style: TextStyle(color: Color(0xFF001F5B)),
+          style: TextStyle(color: Color(0xFF080040)),
         ),
       ),
       body: Center(
@@ -81,9 +85,10 @@ class _RegisterPageState extends State<RegisterPage> {
               const Text(
                 'Inscription',
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF001F5B),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF080040),
+                  letterSpacing: -0.48,
                 ),
               ),
               const SizedBox(height: 50),
