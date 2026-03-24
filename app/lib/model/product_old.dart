@@ -1,4 +1,6 @@
 // ignore_for_file: constant_identifier_names
+//Il s'agit ici de la version riche de Product, moins utilisée pour l'application mais qui peut être utile pour récupérer des données
+
 class ProductOld {
   final String barcode;
   final String? name;
