@@ -22,7 +22,7 @@ class FavoritesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final fav = favorites[index];
 
-                final product = Product(
+                final product = ProductModel(
                   id: fav.id,
                   barcode: fav.barcode,
                   name: fav.productName ?? '',

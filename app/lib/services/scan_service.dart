@@ -4,25 +4,23 @@ import 'package:formation_flutter/pocketbase/pocketbase_client.dart';
 
 /// Gère la liste des scans de l'utilisateur connecté.
 ///
-/// Usage :
-///   context.watch<ScanService>().scans   → liste des scans (desc)
-///   context.watch<ScanService>().hasScans → bool
-///   context.read<ScanService>().load()   → rechargement manuel
+/// - [scans]    : liste triée du plus récent au plus ancien
+/// - [hasScans] : bool (au moins 1 scan)
+/// - [isLoading]: chargement initial en cours
+/// - [load()]   : charge depuis PocketBase
+/// - [addScan()] : ajoute en tête de liste (mise à jour instantanée de l'UI)
+/// - [clear()]  : réinitialise à la déconnexion
 class ScanService extends ChangeNotifier {
   List<ScanRecord> _scans = [];
   bool _isLoading = false;
   bool _loaded = false;
 
-  ScanService() {
-    load(); 
-  }
-
-  List<ScanRecord> get scans => _scans;
+  List<ScanRecord> get scans => List.unmodifiable(_scans);
   bool get hasScans => _scans.isNotEmpty;
   bool get isLoading => _isLoading;
 
-  /// Charge les scans depuis PocketBase.
-  /// Si [force] est false, ne recharge pas si déjà chargé.
+  /// Charge les scans depuis PocketBase (triés desc par date de création).
+  /// Si [force] est false et déjà chargé, ne refait pas la requête.
   Future<void> load({bool force = false}) async {
     if (_loaded && !force) return;
 
@@ -48,6 +46,14 @@ class ScanService extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Ajoute un scan en tête de liste sans recharger toute la BDD.
+  /// Appelé par [HomePage] après un scan réussi.
+  void addScan(ScanRecord scan) {
+    _scans.insert(0, scan);
+    _loaded = true; // marque comme chargé si ce n'était pas le cas
+    notifyListeners();
   }
 
   /// Réinitialise le service (à la déconnexion).

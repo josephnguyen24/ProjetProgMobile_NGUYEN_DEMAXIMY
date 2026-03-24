@@ -44,7 +44,7 @@ class HomePageHistoryScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final scan = scans[index];
 
-          final product = Product(
+          final product = ProductModel(
             id: scan.id ?? '',
             barcode: scan.barcode,
             name: scan.productName ?? '',

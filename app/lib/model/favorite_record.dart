@@ -29,6 +29,8 @@ class FavoriteRecord {
   }
 }
 
+
+
 extension _StringExt on String {
   String? get nullIfEmpty => isEmpty ? null : this;
 }
